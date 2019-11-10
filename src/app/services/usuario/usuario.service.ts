@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { URL_SERVICIOS } from 'src/app/config/config';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { SubirArchivoService } from '../subirArchivo/subir-archivo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,8 @@ export class UsuarioService {
 
   constructor(
     public http: HttpClient,
-    public _router: Router) {
+    public _router: Router,
+    public _subirArchivoService: SubirArchivoService) {
     this.cargarStorage();
   }
 
@@ -68,6 +71,50 @@ export class UsuarioService {
   crearUsuario(usuario: Usuario) {
     const url = URL_SERVICIOS + '/usuario';
     return this.http.post(url, usuario);
+  }
+
+  actualizarUsuario(usuario: Usuario) {
+    let url = URL_SERVICIOS + '/usuario/' + usuario._id;
+    url += '?token=' + this.token;
+    return this.http.put(url, usuario)
+    .pipe(map((resp: any) => {
+        this.guardarStorage(usuario._id, this.token, usuario);
+        Swal.fire('Alerta', 'Usuario actualizado correctamente.', 'success');
+        return true;
+    }));
+  }
+
+  cambiarImagen(archivo: File, id: string) {
+    this._subirArchivoService.subirArchivo(archivo, 'usuarios', id)
+      .then ((resp: any) => {
+        this.usuario.img = resp.usuario.img;
+        Swal.fire('Alerta', 'Imagen actualizada correctamente.', 'success');
+        this.guardarStorage(id, this.token, this.usuario);
+      }).catch(resp => {
+        console.log(resp);
+      });
+  }
+
+  cargarUsuarios(desde: number = 0) {
+    const url = URL_SERVICIOS + '/usuario?desde=' + desde;
+    return this.http.get(url);
+  }
+
+  buscarUsuarios(termino: string) {
+    const url = URL_SERVICIOS + '/busqueda/coleccion/usuarios/' + termino;
+    return this.http.get(url)
+    .pipe(map((resp: any) => resp.usuarios));
+  }
+
+  borrarUsuario(id: string) {
+    let url = URL_SERVICIOS + '/usuario/' + id;
+    url += '?token=' + this.token;
+    return this.http.delete(url)
+      .pipe(map((resp: any) => {
+        console.log(resp);
+        Swal.fire('Alerta', 'El usuario ha sido eliminado correctamente.', 'success');
+        return true;
+      }));
   }
 
   logout() {

@@ -13,6 +13,9 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { PipesModule } from '../pipes/pipes.module';
+import { ProfileComponent } from './profile/profile.component';
+import { CommonModule } from '@angular/common';
+import { UsuariosComponent } from './usuarios/usuarios.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +27,9 @@ import { PipesModule } from '../pipes/pipes.module';
         GraficoDonaComponent,
         AccountSettingsComponent,
         PromesasComponent,
-        RxjsComponent
+        RxjsComponent,
+        ProfileComponent,
+        UsuariosComponent
     ],
     exports: [
         DashboardComponent,
@@ -34,6 +39,7 @@ import { PipesModule } from '../pipes/pipes.module';
         PromesasComponent
     ],
     imports: [
+        CommonModule,
         SharedModule,
         PipesModule,
         FormsModule,
