@@ -6,7 +6,7 @@ import { ModalUploadService } from './modal-upload.service';
 @Component({
   selector: 'app-modal-upload',
   templateUrl: './modal-upload.component.html',
-  styleUrls: ['./modal-upload.component.scss']
+  styles: []
 })
 export class ModalUploadComponent implements OnInit {
 

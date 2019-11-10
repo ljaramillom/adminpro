@@ -113,7 +113,6 @@ export class UsuarioService {
     url += '?token=' + this.token;
     return this.http.delete(url)
       .pipe(map((resp: any) => {
-        console.log(resp);
         Swal.fire('Alerta', 'El usuario ha sido eliminado correctamente.', 'success');
         return true;
       }));
