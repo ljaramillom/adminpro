@@ -78,7 +78,9 @@ export class UsuarioService {
     url += '?token=' + this.token;
     return this.http.put(url, usuario)
     .pipe(map((resp: any) => {
-        this.guardarStorage(usuario._id, this.token, usuario);
+        if (usuario._id === this.usuario._id) {
+          this.guardarStorage(usuario._id, this.token, usuario);
+        }
         Swal.fire('Alerta', 'Usuario actualizado correctamente.', 'success');
         return true;
     }));

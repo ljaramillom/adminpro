@@ -36,6 +36,7 @@ export class ProfileComponent implements OnInit {
       this.imagenSubir = null;
       return;
     }
+
     if (archivo.type.indexOf('image') < 0) {
       Swal.fire('Error', 'El archivo seleccionado no es una imagen.', 'error');
       this.imagenSubir = null;
@@ -43,9 +44,10 @@ export class ProfileComponent implements OnInit {
     }
 
     this.imagenSubir = archivo;
-    // let reader = new FileReader();
-    // let urlImagenTemp = reader.readAsDataURL( archivo );
-    // reader.onloadend = () => this.imagenTemp = reader.result;
+
+    let reader = new FileReader();
+    let urlImagenTemp = reader.readAsDataURL( archivo );
+    reader.onloadend = () => this.imagenTemp = <string>reader.result;
 
   }
 

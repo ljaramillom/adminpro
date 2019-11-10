@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/service.index';
 import { Usuario } from '../../models/usuario.model';
 import Swal from 'sweetalert2';
+import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -16,11 +17,14 @@ export class UsuariosComponent implements OnInit {
   cargando: boolean = true;
 
   constructor(
-    public _usuarioService: UsuarioService
+    public _usuarioService: UsuarioService,
+    public _modalUploadService: ModalUploadService,
   ) { }
 
   ngOnInit() {
     this.cargarUsuarios();
+    this._modalUploadService.notificacion
+        .subscribe(resp => this.cargarUsuarios());
   }
 
   cargarUsuarios() {
@@ -66,7 +70,7 @@ export class UsuariosComponent implements OnInit {
     }
     Swal.fire({
       title: '¿Está seguro de realizar la siguiente acción?',
-      text: "El usuario " + usuario.nombre + ' será eliminado.',
+      text: "El usuario con nombre " + usuario.nombre + ' será eliminado.',
       // icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -83,5 +87,15 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
+  guardarUsuario(usuario: Usuario) {
+    this._usuarioService.actualizarUsuario(usuario)
+      .subscribe(resp => {
+        console.log(resp);
+      });
+  }
+
+  mostrarModal(id: string) {
+    this._modalUploadService.mostrarModal('usuarios', id);
+  }
 
 }
