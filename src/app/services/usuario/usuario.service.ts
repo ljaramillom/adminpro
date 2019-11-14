@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Usuario } from '../../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { URL_SERVICIOS } from 'src/app/config/config';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { SubirArchivoService } from '../subirArchivo/subir-archivo.service';
+import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs/Rx';
+
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -68,10 +70,14 @@ export class UsuarioService {
     }
     const url = URL_SERVICIOS + '/login';
     return this.http.post(url, usuario)
-    .pipe(map((resp: any) => {
+    .pipe(
+      map((resp: any) => {
       this.guardarStorage(resp.id, resp.token, resp.usuario, resp.menu);
-      console.log(resp);
       return true;
+    }),
+    catchError(error => {
+      Swal.fire('Error', error.error.msg, 'error');
+      return Observable.throw(error);
     }));
   }
 
@@ -90,6 +96,10 @@ export class UsuarioService {
         }
         Swal.fire('Alerta', 'Usuario actualizado correctamente.', 'success');
         return true;
+    }),
+    catchError(error => {
+      Swal.fire('Error', error.error.msg, 'error');
+      return Observable.throw(error);
     }));
   }
 
